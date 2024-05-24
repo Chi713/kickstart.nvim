@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -577,6 +577,78 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        html = {
+          filetypes = { 'jinja', 'html' },
+        },
+        htmx = {
+          filetypes = { 'html', 'jinja', 'templ' },
+        },
+        tailwindcss = {
+          filetypes = {
+            'aspnetcorerazor',
+            'astro',
+            'astro-markdown',
+            'blade',
+            'clojure',
+            'django-html',
+            'htmldjango',
+            'edge',
+            'eelixir',
+            'elixir',
+            'ejs',
+            'erb',
+            'eruby',
+            'gohtml',
+            'gohtmltmpl',
+            'haml',
+            'handlebars',
+            'hbs',
+            'html',
+            'html-eex',
+            'heex',
+            'jade',
+            'leaf',
+            'liquid',
+            'markdown',
+            'mdx',
+            'mustache',
+            'njk',
+            'nunjucks',
+            'php',
+            'razor',
+            'slim',
+            'twig',
+            'css',
+            'less',
+            'postcss',
+            'sass',
+            'scss',
+            'stylus',
+            'sugarss',
+            'javascript',
+            'javascriptreact',
+            'reason',
+            'rescript',
+            'typescript',
+            'typescriptreact',
+            'vue',
+            'svelte',
+            'templ',
+            'jinja',
+          },
+        },
+        jinja_lsp = {
+          filetypes = { 'jinja', 'html' },
+          root_dir = function(fname)
+            return '.'
+            --return nvim_lsp.util.find_git_ancestor(fname)
+          end,
+          init_options = {
+            templates = './templates',
+            backend = { './src' },
+            lang = 'rust',
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -618,7 +690,9 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            if server_name ~= 'rust_analyzer' then
+              require('lspconfig')[server_name].setup(server)
+            end
           end,
         },
       }
@@ -733,9 +807,9 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -845,7 +919,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'html' } },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -874,9 +948,9 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -885,7 +959,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -908,5 +982,33 @@ require('lazy').setup({
   },
 })
 
+vim.g.rustaceanvim = {
+  -- Plugin configuration
+  tools = {},
+  -- LSP configuration
+  server = {
+    on_attach = function(client, bufnr)
+      -- you can also put keymaps in here
+    end,
+    default_settings = {
+      -- rust-analyzer language server configuration
+      ['rust-analyzer'] = {
+        cargo = {
+          allFeatures = true,
+        },
+      },
+    },
+  },
+  -- DAP configuration
+  dap = {},
+}
+
+vim.filetype.add {
+  extension = {
+    jinja = 'html',
+    jinja2 = 'jinja',
+    j2 = 'jinja',
+  },
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
