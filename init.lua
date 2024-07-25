@@ -575,7 +575,7 @@ require('lazy').setup({
         -- tsserver = {},
         --
         html = {
-          filetypes = { 'jinja', 'html' },
+          filetypes = { 'jinja', 'html', 'heex' },
         },
         htmx = {
           filetypes = { 'html', 'jinja', 'templ' },
@@ -645,6 +645,17 @@ require('lazy').setup({
             backend = { './src' },
             lang = 'rust',
           },
+        },
+        elixirls = {
+          settings = {
+            dialyzerEnabled = true,
+            fetchDeps = false,
+            enableTestLenses = false,
+            suggestSpecs = false,
+          },
+        },
+        emmet_language_server = {
+          filetypes = { 'html' },
         },
 
         lua_ls = {

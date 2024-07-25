@@ -30,6 +30,43 @@ return {
     'ThePrimeagen/harpoon',
     version = '*',
     dependencies = 'ThePrimeagen/harpoon',
+    config = function()
+      require('telescope').load_extension 'harpoon'
+    end,
+    keys = {
+      {
+        '<leader>ga',
+        function()
+          require('harpoon.mark').add_file()
+        end,
+        mode = { 'n', 't' },
+        desc = '[G]oto [A]dd',
+      },
+      {
+        '<leader>gm',
+        function()
+          require('harpoon.ui').toggle_quick_menu()
+        end,
+        mode = { 'n', 't' },
+        desc = '[G]oto quick [M]enu',
+      },
+      {
+        '<leader>gn',
+        function()
+          require('harpoon.ui').nav_next()
+        end,
+        mode = { 'n', 't' },
+        desc = '[G]oto [N]ext',
+      },
+      {
+        '<leader>gp',
+        function()
+          require('harpoon.ui').nav_prev()
+        end,
+        mode = { 'n', 't' },
+        desc = '[G]oto [P]revious',
+      },
+    },
   },
   {
     'nvim-tree/nvim-tree.lua',
@@ -46,6 +83,14 @@ return {
         end,
         mode = { 'n', 't' },
         desc = '[N]vim-tree [T]oggle',
+      },
+      {
+        '<leader>nf',
+        function()
+          vim.cmd [[NvimTreeFocus]]
+        end,
+        mode = { 'n', 't', 'v' },
+        desc = '[N]vim-tree [F]ocus',
       },
     },
     config = function()
